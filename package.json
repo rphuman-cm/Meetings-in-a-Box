@@ -1,0 +1,10 @@
+{
+  "name": "ramp-program-hub",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Interactive RAMP curriculum app",
+  "scripts": {
+    "start": "sh -c 'python3 -m http.server ${PORT:-4173}'",
+    "preview": "sh -c 'python3 -m http.server ${PORT:-4173}'"
+  }
+}
