@@ -1,25 +1,33 @@
-# RAMP Program Hub
+# Matchup Delta Engine
 
-A professional, interactive web app for presenting the RAMP curriculum, program journey, and learner/facilitator resources.
+A browser-based, app-ready matchup engine that compares Team A vs Team B season profile metrics and outputs:
 
-## What’s included
-- **Overview tab** with program purpose, KPI bars, and facilitator checklist
-- **Curriculum tab** with searchable/filterable modules and expandable details
-- **Schedule tab** with a 12-week pacing timeline
-- **Resources tab** with templates and support assets
-- **Progress tracking** (module completion stored in localStorage)
-- **Theme toggle** (light/dark) and print-friendly curriculum view
+- Projected margin adjustment (and final projected margin)
+- Projected total adjustment (and final projected total)
+- Win probability confidence and chaos/volatility rating
+- Recommended bet type leaning (spread vs total vs derivatives)
+- Parlay correlation tag (Fav+Over / Fav+Under / Avoid assumptions)
+- Human-readable mismatch flags
 
-## Quick preview
-### Option 1 (recommended)
+## Quick start
+
 ```bash
 npm start
 ```
-This serves the app on `PORT` if provided by your preview environment, otherwise on `4173`.
 
-### Option 2
-```bash
-python3 -m http.server 8000
-```
+Then open `http://localhost:4173` (or your environment `PORT`).
 
-Then open the shown local URL (for example: <http://localhost:4173> or <http://localhost:8000>).
+## Model notes
+
+The engine follows a six-delta structure in points per 100 possessions:
+
+1. Turnover Pressure Delta
+2. Rebounding Clash Delta
+3. 3P Volume vs Allowed Delta
+4. 3P Efficiency Clash Delta
+5. 2P/Rim Efficiency Clash Delta
+6. Free Throw Rate Delta
+
+Those deltas roll into a single matchup delta, then scale by expected possessions to produce scoreboard-level adjustments.
+
+Constants and league means/std values are exposed in the UI so you can tune with backtesting.

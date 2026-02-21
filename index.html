@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RAMP Program Hub</title>
+    <title>Matchup Delta Engine</title>
     <meta
       name="description"
-      content="Interactive curriculum hub for the RAMP program with module details, schedule, and learner resources."
+      content="App-ready matchup delta engine for spread, total, volatility, and betting correlation outputs."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,197 +17,71 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <nav class="top-nav">
-        <div class="brand">
-          <span class="brand-mark">R</span>
-          <div>
-            <h1>RAMP Program Hub</h1>
-            <p>Curriculum, schedules, outcomes, and learner resources</p>
-          </div>
-        </div>
-        <div class="top-actions">
-          <button id="themeToggle" class="btn btn-secondary" aria-label="Toggle theme">🌙 Dark Mode</button>
-          <button id="printButton" class="btn btn-secondary" aria-label="Print curriculum">🖨️ Print</button>
-        </div>
-      </nav>
-
-      <section class="hero-content">
-        <h2>Career-ready learning through structured practice, coaching, and measurable outcomes.</h2>
-        <p>
-          The RAMP curriculum combines foundational growth, workplace readiness, and portfolio-driven
-          execution. Use this hub to navigate modules, track learner progress, and plan facilitation.
-        </p>
-        <div class="hero-stats" aria-label="Program statistics">
-          <article>
-            <p class="stat-value">12</p>
-            <p class="stat-label">Weeks</p>
-          </article>
-          <article>
-            <p class="stat-value">8</p>
-            <p class="stat-label">Core Modules</p>
-          </article>
-          <article>
-            <p class="stat-value">24+</p>
-            <p class="stat-label">Applied Activities</p>
-          </article>
-          <article>
-            <p class="stat-value">1</p>
-            <p class="stat-label">Employer Showcase</p>
-          </article>
-        </div>
-      </section>
-    </header>
-
     <main class="container">
-      <section class="tabs card" aria-label="Content tabs">
-        <button class="tab active" data-tab="overview">Overview</button>
-        <button class="tab" data-tab="curriculum">Curriculum</button>
-        <button class="tab" data-tab="schedule">Schedule</button>
-        <button class="tab" data-tab="resources">Resources</button>
-      </section>
+      <header class="hero card">
+        <h1>Matchup Delta Engine</h1>
+        <p>
+          Enter two teams' season profile metrics and get app-ready adjustments for projected margin,
+          projected total, win probability confidence/volatility, bet recommendations, and parlay
+          correlation tags.
+        </p>
+      </header>
 
-      <section id="overview" class="tab-panel">
-        <div class="overview-grid">
-          <article class="card panel">
-            <h3>Program Purpose</h3>
-            <p>
-              RAMP supports learners in developing personal leadership, communication, digital workflow,
-              and interview/portfolio competencies needed to transition into professional opportunities.
-            </p>
-            <ul>
-              <li>Weekly instructor-led sessions</li>
-              <li>Peer collaboration and project-based learning</li>
-              <li>Artifact-based performance tracking</li>
-            </ul>
+      <section class="layout">
+        <form id="engineForm" class="card">
+          <h2>Inputs</h2>
+
+          <div class="input-grid">
+            <label>Team A Name <input name="teamAName" value="Team A" /></label>
+            <label>Team B Name <input name="teamBName" value="Team B" /></label>
+          </div>
+
+          <h3>Base model</h3>
+          <div class="input-grid">
+            <label>AdjEM A <input type="number" step="0.01" name="adjEMA" value="22.5" /></label>
+            <label>AdjEM B <input type="number" step="0.01" name="adjEMB" value="18.2" /></label>
+            <label>Home Court Advantage <input type="number" step="0.01" name="hca" value="2.2" /></label>
+            <label>Base Total <input type="number" step="0.01" name="baseTotal" value="142.5" /></label>
+          </div>
+
+          <h3>Team A metrics</h3>
+          <div class="input-grid metrics" id="teamAFields"></div>
+
+          <h3>Team B metrics</h3>
+          <div class="input-grid metrics" id="teamBFields"></div>
+
+          <h3>Model constants</h3>
+          <div class="input-grid constants" id="constantFields"></div>
+
+          <button type="submit" class="btn">Run Matchup Delta Engine</button>
+        </form>
+
+        <section class="card output" id="results">
+          <h2>Outputs</h2>
+          <div id="summaryCards" class="summary-cards"></div>
+
+          <article>
+            <h3>Core Deltas (pts/100)</h3>
+            <ul id="deltaList"></ul>
           </article>
 
-          <article class="card panel">
-            <h3>Cohort KPIs</h3>
-            <div id="kpiBars" class="kpi-bars" aria-label="KPI progress chart">
-              <div class="kpi-row"><span>Attendance</span><div><i style="--value: 92%"></i></div><strong>92%</strong></div>
-              <div class="kpi-row"><span>Assignments</span><div><i style="--value: 88%"></i></div><strong>88%</strong></div>
-              <div class="kpi-row"><span>Mock Interview Completion</span><div><i style="--value: 81%"></i></div><strong>81%</strong></div>
-              <div class="kpi-row"><span>Portfolio Draft Ready</span><div><i style="--value: 76%"></i></div><strong>76%</strong></div>
-            </div>
+          <article>
+            <h3>Mismatch Flags</h3>
+            <ul id="flagList"></ul>
           </article>
 
-          <article class="card panel">
-            <h3>Facilitator Checklist</h3>
-            <ul class="checklist" id="facilitatorChecklist">
-              <li><label><input type="checkbox" /> Session objective shared</label></li>
-              <li><label><input type="checkbox" /> Activity materials prepared</label></li>
-              <li><label><input type="checkbox" /> Reflection prompts posted</label></li>
-              <li><label><input type="checkbox" /> Attendance + follow-up logged</label></li>
-            </ul>
+          <article>
+            <h3>Bet Type Recommendations</h3>
+            <ul id="betList"></ul>
           </article>
-        </div>
-      </section>
 
-      <section id="curriculum" class="tab-panel hidden">
-        <section class="controls card">
-          <div class="search-group">
-            <label for="searchInput">Search curriculum</label>
-            <input id="searchInput" type="search" placeholder="Try: interview, communication, portfolio" />
-          </div>
-          <div class="filter-group">
-            <p>Filter by track</p>
-            <div class="chips" role="group" aria-label="Track filters">
-              <button class="chip active" data-track="all">All</button>
-              <button class="chip" data-track="foundation">Foundation</button>
-              <button class="chip" data-track="professional">Professional</button>
-              <button class="chip" data-track="career">Career</button>
-            </div>
-          </div>
-          <div class="progress-group">
-            <p>Completion</p>
-            <strong id="completionText">0 / 8 completed</strong>
-          </div>
+          <article>
+            <h3>Parlay Correlation Tag</h3>
+            <p id="correlationTag"></p>
+          </article>
         </section>
-
-        <section>
-          <div class="section-heading">
-            <h3>Curriculum Modules</h3>
-            <p>Expand modules for outcomes, activities, deliverables, and estimated time.</p>
-          </div>
-          <div id="moduleGrid" class="module-grid"></div>
-        </section>
-      </section>
-
-      <section id="schedule" class="tab-panel hidden">
-        <section class="timeline card">
-          <div class="section-heading">
-            <h3>12-Week Program Journey</h3>
-            <p>Recommended pacing for a high-accountability cohort model.</p>
-          </div>
-          <ol id="timelineList"></ol>
-        </section>
-      </section>
-
-      <section id="resources" class="tab-panel hidden">
-        <div class="resources-grid">
-          <article class="card panel">
-            <h3>Templates</h3>
-            <ul>
-              <li>Weekly reflection template</li>
-              <li>Interview STAR worksheet</li>
-              <li>Portfolio case-study format</li>
-            </ul>
-          </article>
-          <article class="card panel">
-            <h3>Facilitator Assets</h3>
-            <ul>
-              <li>Session run-of-show guide</li>
-              <li>Participation rubric</li>
-              <li>Cohort health check tracker</li>
-            </ul>
-          </article>
-          <article class="card panel">
-            <h3>Learner Supports</h3>
-            <ul>
-              <li>Peer accountability circle prompts</li>
-              <li>Career coaching office hours</li>
-              <li>Employer showcase prep guide</li>
-            </ul>
-          </article>
-        </div>
       </section>
     </main>
-
-    <template id="moduleTemplate">
-      <article class="module card" data-track="">
-        <button class="module-toggle" aria-expanded="false">
-          <div>
-            <p class="module-track"></p>
-            <h4 class="module-title"></h4>
-            <p class="module-meta"></p>
-          </div>
-          <span class="module-icon">+</span>
-        </button>
-        <div class="module-body" hidden>
-          <p class="module-summary"></p>
-          <div>
-            <h5>Learning Outcomes</h5>
-            <ul class="module-outcomes"></ul>
-          </div>
-          <div>
-            <h5>Key Activities</h5>
-            <ul class="module-activities"></ul>
-          </div>
-          <div>
-            <h5>Key Deliverable</h5>
-            <p class="module-deliverable"></p>
-          </div>
-          <label class="module-complete-label">
-            <input class="module-complete" type="checkbox" /> Mark as completed
-          </label>
-        </div>
-      </article>
-    </template>
-
-    <footer class="footer">
-      <p>RAMP Program Hub • Built for facilitators, learners, and employer partners.</p>
-    </footer>
 
     <script src="app.js"></script>
   </body>
